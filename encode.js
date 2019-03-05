@@ -182,6 +182,13 @@ State.prototype.record = function(section_name, record) {
                 , new Buffer(record.fingerprint)
                 ]
         break
+      case 'IN CAA':
+        rdata = [ buf8(record.data.flag)
+                , buf8(record.data.tag.length)
+                , new Buffer(record.data.tag)
+                , new Buffer(record.data.value)
+                ]
+        break
       case 'NONE A':
         // I think this is no data, from RFC 2136 S. 2.4.3.
         rdata = []
@@ -268,6 +275,12 @@ function buf32(value) {
 function buf16(value) {
   var buf = new Buffer(2)
   buf.writeUInt16BE(value, 0)
+  return buf
+}
+
+function buf8(value) {
+  var buf = new Buffer(1)
+  buf.writeUInt8(value, 0)
   return buf
 }
 
