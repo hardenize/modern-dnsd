@@ -50,6 +50,7 @@ function DNSMessage (body) {
   this.recursion_available = null
   this.authenticated       = null
   this.checking_disabled   = null
+  this.edns                = false;
 
   if(Buffer.isBuffer(body))
     this.parse(body)
@@ -68,6 +69,7 @@ function DNSMessage (body) {
   // EDNS processing. For now, just remove those records.
   SECTIONS.forEach(function(section) {
     if(self[section]) {
+      self.edns = self.edns || self[section].some(function(record) { return record.edns; });
       self[section] = self[section].filter(function(record) { return ! record.edns })
       if(self[section].length == 0)
         delete self[section]
